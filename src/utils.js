@@ -2,6 +2,7 @@ import { dirname } from 'path';
 import { fileURLToPath } from 'url';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import { env } from './config/environment.js';
 
 export const serverRoot = dirname(fileURLToPath(import.meta.url));
 
@@ -16,9 +17,9 @@ export function isValidPassword(password, hashedPassword){
 
 //jwt functions
 export function generateToken(payload){
-  return jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '24h' });
+  return jwt.sign(payload, env.JWT_SECRET, { expiresIn: '10h' });
 }
 
 export function verifyToken(token){
-  return jwt.verify(token, procces.env.JWT_SECRET);
+  return jwt.verify(token, env.JWT_SECRET);
 }
