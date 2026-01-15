@@ -8,6 +8,7 @@ import { initializePassport } from './config/passport.js';
 import { serverRoot } from './utils.js';
 import userRouter from './routes/users.router.js';
 import sessionsRouter from './routes/sessions.router.js';
+import viewsRouter from './routes/views.router.js';
 
 const app = express();
 const PORT = env.PORT;
@@ -17,7 +18,8 @@ app.set('view engine', 'handlebars');
 app.set('views', serverRoot + '/views');
 
 app.use(express.json());
-app.use(express.static(serverRoot + '/public'))
+app.use(express.static(serverRoot + '/public'));
+app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser(env.COOKIE_SECRET));
 
 initializePassport();
@@ -26,6 +28,7 @@ app.use(passport.initialize());
 //routes
 app.use('/api/users', userRouter);
 app.use('/api/sessions', sessionsRouter);
+app.use('/', viewsRouter);
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
