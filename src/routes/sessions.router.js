@@ -1,12 +1,11 @@
 import { Router } from 'express';
 import passport from 'passport';
-import { generateToken, verifyToken } from '../utils.js'
+import { generateToken } from '../utils.js'
 import { passportCall } from '../config/passport.js';
 
 const sessionsRouter = Router();
 
 sessionsRouter.post('/login', passport.authenticate('login', { session: false }), async (req, res) => {
-  // if(req.cookies.jwt) return res.status(200).json({ status: "success", message: "Already logged in" });
 
   const token = generateToken({
     _id: req.user._id,
