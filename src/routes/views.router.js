@@ -4,19 +4,17 @@ import { verifyToken } from "../utils.js";
 const viewsRouter = Router();
 
 viewsRouter.get('/register', async (req, res) => {
-  try{
-    res.render('register');
-  } catch(error){
-    console.log(error.message)
-  }
+  res.render('register');
 });
 
 viewsRouter.get('/login', async (req, res) => {
+  if(req.cookies.jwt) return res.redirect('/profile');
   res.render('login');
 });
 
 viewsRouter.get('/profile', async (req, res) => {
   try {
+    if(!req.cookies.jwt) return res.redirect('/login');
     const user = verifyToken(req.cookies.jwt);
     res.render('profile', { user });
   } catch (error) {
