@@ -1,7 +1,7 @@
 import express from 'express';
 import { engine } from 'express-handlebars';
 import { env } from './config/environment.js'
-import { connectDB } from './database/db.js';
+import MongoSingleton from './database/db.js';
 import cookieParser from 'cookie-parser';
 import passport from 'passport';
 import { initializePassport } from './config/passport.js';
@@ -32,5 +32,5 @@ app.use('/', viewsRouter);
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
-  connectDB();
+  MongoSingleton.getInstance();
 });
