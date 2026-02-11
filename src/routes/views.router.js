@@ -1,25 +1,24 @@
 import { Router } from "express";
-import { verifyToken } from "../utils.js";
+import { renderHome, renderProductDetails, renderRegister, renderProfile, renderLogin, renderRecoverPasswordForm, renderChangePasswordForm, adminProducts } from "../controllers/views.controller.js";
 
 const viewsRouter = Router();
 
-viewsRouter.get('/register', async (req, res) => {
-  res.render('register');
-});
+viewsRouter.get('/', renderHome);
 
-viewsRouter.get('/login', async (req, res) => {
-  if(req.cookies.jwt) return res.redirect('/profile');
-  res.render('login');
-});
+viewsRouter.get('/products/:id', renderProductDetails);
 
-viewsRouter.get('/profile', async (req, res) => {
-  try {
-    if(!req.cookies.jwt) return res.redirect('/login');
-    const user = verifyToken(req.cookies.jwt);
-    res.render('profile', { user });
-  } catch (error) {
-    res.redirect('/login');
-  }
-});
+viewsRouter.get('/register', renderRegister);
+
+viewsRouter.get('/login', renderLogin);
+
+viewsRouter.get('/profile', renderProfile);
+
+viewsRouter.get('/recover-password-form', renderRecoverPasswordForm);
+
+viewsRouter.get('/change-password-form', renderChangePasswordForm);
+
+viewsRouter.get('/admin/products', adminProducts)
+
+// viewsRouter.get('*', renderError);
 
 export default viewsRouter;
