@@ -6,8 +6,10 @@ import cookieParser from 'cookie-parser';
 import passport from 'passport';
 import { initializePassport } from './config/passport.js';
 import { serverRoot } from './utils.js';
-import userRouter from './routes/users.router.js';
-import sessionsRouter from './routes/sessions.router.js';
+import productsRouter from './routes/api/products.router.js';
+import userRouter from './routes/api/users.router.js';
+import sessionsRouter from './routes/api/sessions.router.js';
+import mailingRouter from './routes/mailing.router.js';
 import viewsRouter from './routes/views.router.js';
 
 const app = express();
@@ -26,9 +28,11 @@ initializePassport();
 app.use(passport.initialize());
 
 //routes
+app.use('/api/products', productsRouter);
 app.use('/api/users', userRouter);
 app.use('/api/sessions', sessionsRouter);
 app.use('/', viewsRouter);
+app.use('/', mailingRouter);
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
