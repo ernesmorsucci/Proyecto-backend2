@@ -1,4 +1,7 @@
-<h2>Bienvenido, {{user.email}}</h2>
+<h2>Bienvenido, {{user.name}} {{user.lastName}}</h2>
 <h3>Rol: {{user.role}}</h3>
-
+{{#if isAdmin}}
+  <p>Eres un administrador. Tienes acceso a todas las funcionalidades.</p>
+  <a href="/admin/products">Crear Productos</a>
+{{/if}}
 <a href="/api/sessions/logout">Cerrar Sesión</a>
