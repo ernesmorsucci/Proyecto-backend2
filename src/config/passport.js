@@ -2,9 +2,8 @@ import passport from 'passport';
 import { Strategy as localStrategy } from 'passport-local';
 import { Strategy as jwtStrategy, ExtractJwt } from 'passport-jwt';
 import { env } from '../config/environment.js'
-import { userModel } from '../models/users.model.js';
-import { cartModel } from '../models/carts.model.js';
 import { createHash, isValidPassword } from '../utils.js';
+import { createUser, findUserByEmail, setTokenData } from '../services/api/users.service.js';
 
 export function initializePassport(){
   //register strategy
@@ -16,11 +15,10 @@ export function initializePassport(){
   },
   async (req, username, password, done) => {
     try{
-      if(await userModel.findOne({ email: username })) throw new Error("User already registered");
+      if(await findUserByEmail(username)) throw new Error("User already registered");
       
       password = createHash(password);
-      const newCart = await cartModel.create({});
-      const newUser = await userModel.create({ ...req.body, password, cartId: newCart._id });
+      const newUser = await createUser(req.body, password);
       done(null, newUser);
     } catch(error){
       done(error, null);
@@ -35,11 +33,13 @@ export function initializePassport(){
   },
   async (username, password, done) => {
     try{
-      const user = await userModel.findOne({ email: username });
-      
+      const user = await findUserByEmail(username);
+      if(!user) throw new Error("User not found");
+
       if(user){
         if(isValidPassword(password, user.password)){
-          return done(null, user);
+          const tokenData = await setTokenData(user);
+          return done(null, tokenData);
         } else{
           return done(null, false);
         }
